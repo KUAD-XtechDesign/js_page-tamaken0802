@@ -28,10 +28,10 @@ $(function(){
 
  // ★追加 MTL,Obj読み込み
  new THREE.MTLLoader().setPath('./three/')
- .load('table.mtl',
+ .load('chr_sword.mtl',
  function(materials){
   materials.preload();
-  new THREE.OBJLoader().setPath('./three/').setMaterials(materials).load('table.obj',
+  new THREE.OBJLoader().setPath('./three/').setMaterials(materials).load('chr_sword.obj',
   function(object){
    objmodel = object.clone();
    obj = new THREE.Object3D();
@@ -42,21 +42,6 @@ $(function(){
   );
  });
  var obj = new THREE.Mesh();
-
-    //load OBJ,MTL files
-    let mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setTexturePath( './three/' );
-    mtlLoader.setPath( './three/chr_sword' );
-    mtlLoader.load( 'chr_sword.mtl', function( materials ) {
-
-        materials.preload();
-
-        let objLoader = new THREE.OBJLoader();
-        objLoader.setMaterials( materials );
-        objLoader.setPath( './three/chr_sword' );
-        objLoader.load( 'chr_sword.obj', function ( loadedMesh ) {
-
-
 
  // 実行
  animate();

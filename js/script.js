@@ -1,81 +1,105 @@
-$(function(){
-    /*
- * WebGLRendererの生成
+import './style.css'
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import * as dat from 'dat.gui'
+
+// Debug
+const gui = new dat.GUI()
+
+// Canvas
+const canvas = document.querySelector('canvas.webgl')
+
+// Scene
+const scene = new THREE.Scene()
+
+// Objects
+const geometry = new THREE.TorusGeometry( .7, .2, 16, 100 );
+
+// Materials
+
+const material = new THREE.MeshBasicMaterial()
+material.color = new THREE.Color(0xff0000)
+
+// Mesh
+const sphere = new THREE.Mesh(geometry,material)
+scene.add(sphere)
+
+// Lights
+
+const pointLight = new THREE.PointLight(0xffffff, 0.1)
+pointLight.position.x = 2
+pointLight.position.y = 3
+pointLight.position.z = 4
+scene.add(pointLight)
+
+/**
+ * Sizes
  */
-var renderer = new THREE.WebGLRenderer({antialias: true});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setClearColor(0x000000, 1.0);
-document.body.appendChild(renderer.domElement);
-
-
-/*
- * シーンの追加
- */
-var scene = new THREE.Scene();
-
-
-/*
- * カメラの生成
- */
-var fov = 75;
-var aspect = window.innerWidth / window.innerHeight;
-var near = 0.1;
-var far = 10000;
-var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-var camera_position_x0 = 0;
-var camera_position_y0 = 0;
-var camera_position_z0 = 800;
-camera.position.set(camera_position_x0,camera_position_y0,camera_position_z0);
-
-
-/*
- * Orbitコントローラを生成
- */
-var controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-
-/*
- * Lightをシーンに追加
- */
-var light = new THREE.DirectionalLight(0xffffff);
-light.position.set(0,30,-50);
-scene.add(light);
-
-
-/*
- *環境光を追加
- */
-var ambient = new THREE.AmbientLight(0x333333);
-scene.add(ambient);
-
-
-/*
- * 3Dモデルの読み込み
- */
-var loader = new THREE.OBJLoader();
-
-loader.load('obj/', function ( object ) {
-    scene.add( object );
-});
-
-
-/*
- *レンダリング
- */
-function renderRender() {
-  renderer.render(scene, camera);
-
-  requestAnimationFrame(animate);
+const sizes = {
+    width: window.innerWidth,
+    height: window.innerHeight
 }
 
-/*
- *アニメーション
- */
-function animate(){
-  renderRender()
-}
+window.addEventListener('resize', () =>
+{
+    // Update sizes
+    sizes.width = window.innerWidth
+    sizes.height = window.innerHeight
 
-animate();
+    // Update camera
+    camera.aspect = sizes.width / sizes.height
+    camera.updateProjectionMatrix()
 
+    // Update renderer
+    renderer.setSize(sizes.width, sizes.height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
+
+/**
+ * Camera
+ */
+// Base camera
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+camera.position.x = 0
+camera.position.y = 0
+camera.position.z = 2
+scene.add(camera)
+
+// Controls
+// const controls = new OrbitControls(camera, canvas)
+// controls.enableDamping = true
+
+/**
+ * Renderer
+ */
+const renderer = new THREE.WebGLRenderer({
+    canvas: canvas
+})
+renderer.setSize(sizes.width, sizes.height)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+/**
+ * Animate
+ */
+
+const clock = new THREE.Clock()
+
+const tick = () =>
+{
+
+    const elapsedTime = clock.getElapsedTime()
+
+    // Update objects
+    sphere.rotation.y = .5 * elapsedTime
+
+    // Update Orbital Controls
+    // controls.update()
+
+    // Render
+    renderer.render(scene, camera)
+
+    // Call tick again on the next frame
+    window.requestAnimationFrame(tick)
+}
+
+tick()

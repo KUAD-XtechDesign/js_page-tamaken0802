@@ -1,42 +1,20 @@
+*
+{
+    margin: 0;
+    padding: 0;
+}
 
-#intro{
+html,
+body
+{
+    height: 100vh;
+    font-family: 'Poppins';
+}
+
+.webgl
+{
     position: fixed;
-    display: flex;
-    z-index: 101;
-    background-color: #000;
-    width: 100%;
-    height: 100%;
-    color: #fff;
-    font-family: serif;
-    font-size: 20px;
-    align-items: center;
-    justify-content: center;
     top: 0;
-  }
-
-  p{
-    text-align: center;
-    margin: 20px 0;
-    font-size: 1.5rem;
-    letter-spacing: .5em;
-      word-break : break-all;
-  }
-  
-  .TextTyping {
-    text-align: center;
-  }
-
-  .TextTyping span {
-    display: none;
-  }
-  
-  /*文字列後ろの線の設定*/
-  .TextTyping::after {
-    content: "|";
-    animation: typinganime .8s ease infinite;
-  }
-  
-  @keyframes typinganime{
-    from{opacity:0}
-    to{opacity:1}
-  }
+    left: 0;
+    outline: none;
+}

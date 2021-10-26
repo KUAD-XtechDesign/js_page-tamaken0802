@@ -22,11 +22,11 @@ $(function(){
      scene.add(ambientLight);
 
      // ボックス
- var geometry = new THREE.BoxGeometry(10, 10, 10);//x,y,z
- var material = new THREE.MeshStandardMaterial({color: 0xaaaaaa});
- var box = new THREE.Mesh(geometry, material);
- scene.add(box);
-
+     var geometry = new THREE.BoxGeometry(10, 10, 10);//x,y,z
+     var material = new THREE.MeshStandardMaterial({color: 0xaaaaaa});
+     var box = new THREE.Mesh(geometry, material);
+     scene.add(box);
+    
      // 実行
      animate();
      function animate(){

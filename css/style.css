@@ -1,20 +1,17 @@
-*
-{
-    margin: 0;
-    padding: 0;
+html { height: 100%; }
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background: #EDC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
+  text-align: center;
 }
 
-html,
-body
-{
-    height: 100vh;
-    font-family: 'Poppins';
-}
-
-.webgl
-{
-    position: fixed;
-    top: 0;
-    left: 0;
-    outline: none;
+canvas {
+  display: block;
+  cursor: move;
 }

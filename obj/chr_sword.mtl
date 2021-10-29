@@ -1,8 +1,15 @@
-# MagicaVoxel @ Ephtracy
-
 newmtl palette
-illum 1
-Ka 0.000 0.000 0.000
-Kd 1.000 1.000 1.000
-Ks 0.000 0.000 0.000
-map_Kd chr_sword.png
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+adobe_interior_color 0.803922 0.803922 0.803922
+Ns 2.000000
+d 1.000000
+Tr 0.000000
+Pr 0.200000
+Pm 0.080000
+adobe_density 0.000000
+adobe_translucence 0.000000
+adobe_glow 0.000000
+map_Kd chr_sword.png 
+

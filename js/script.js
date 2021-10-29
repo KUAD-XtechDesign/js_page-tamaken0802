@@ -1,105 +1,89 @@
-import './style.css'
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import * as dat from 'dat.gui'
+$(function(){
+	//基本設定
+	var width = 900;
+	var height = 900;
 
-// Debug
-const gui = new dat.GUI()
+	var renderer = new THREE.WebGLRenderer({
+		canvas: document.querySelector("#canvas"),
+        alpha: true
+	});
+	renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setSize(width, height);
+	var scene = new THREE.Scene();
 
-// Canvas
-const canvas = document.querySelector('canvas.webgl')
+	// カメラ設定
+	var camera = new THREE.PerspectiveCamera(3,width / height,1,10000);
+	camera.position.set(1,300, 500); 
+    
+    // ライト設定
+    ambientLight = new THREE.AmbientLight(0xffffff);
+	hemisphereLight = new THREE.HemisphereLight(0xffffff,0x4169e1, 0.15);
+	scene.add(hemisphereLight);
+	scene.add(ambientLight);
 
-// Scene
-const scene = new THREE.Scene()
+	// マウス操作
+	var controls = new THREE.OrbitControls(camera);
+    controls.enableZoom = false;
+    controls.autoRotate = true;
 
-// Objects
-const geometry = new THREE.TorusGeometry( .7, .2, 16, 100 );
+	// MTL,Obj読み込み
+        let model = null;
+        loader.load(
+            url, 
+            function ( gltf ){
+                model = gltf.scene;
+                model.name = "model_with_cloth";
+                model.scale.set(400.0, 400.0, 400.0);
+                model.position.set(0,-400,0);
+                scene.add( gltf.scene );
+    
+                model["test"] = 100;
+                console.log("model");
+            },
+            function ( error ) {
+                console.log( 'An error happened' );
+                console.log( error );
+            }
+        );
+        renderer.gammaOutput = true;
+        renderer.gammaFactor = 2.2;
+    
+	new THREE.MTLLoader().setPath('./obj/')
+    .load('3x3x3.mtl',
+    function(materials){
+        materials.preload();
+        new THREE.OBJLoader().setPath('./obj/').setMaterials(materials).load('3x3x3.obj',
+              function(object){
+                objmodel = object.clone();
+                obj = new THREE.Object3D();
+                obj.add(objmodel);
+                obj.position.set(0, -1.2, 0);
+                scene.add(obj);        
+            }
+        );
+    });
+    var obj = new THREE.Mesh();
 
-// Materials
+	// 実行
+	animate();
+    function animate(){
+        requestAnimationFrame(animate);
+        obj.rotation.y += 0.002;
+        renderer.render(scene, camera);
+    };
 
-const material = new THREE.MeshBasicMaterial()
-material.color = new THREE.Color(0xff0000)
+	// 画面リサイズ
+	onResize();
+	window.addEventListener('resize', onResize);
 
-// Mesh
-const sphere = new THREE.Mesh(geometry,material)
-scene.add(sphere)
+	function onResize() {
+	  var width = window.innerWidth;
+	  var height = window.innerHeight;
 
-// Lights
+	  renderer.setPixelRatio(window.devicePixelRatio);
+	  renderer.setSize(width, height);
 
-const pointLight = new THREE.PointLight(0xffffff, 0.1)
-pointLight.position.x = 2
-pointLight.position.y = 3
-pointLight.position.z = 4
-scene.add(pointLight)
-
-/**
- * Sizes
- */
-const sizes = {
-    width: window.innerWidth,
-    height: window.innerHeight
-}
-
-window.addEventListener('resize', () =>
-{
-    // Update sizes
-    sizes.width = window.innerWidth
-    sizes.height = window.innerHeight
-
-    // Update camera
-    camera.aspect = sizes.width / sizes.height
-    camera.updateProjectionMatrix()
-
-    // Update renderer
-    renderer.setSize(sizes.width, sizes.height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-})
-
-/**
- * Camera
- */
-// Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 0
-camera.position.y = 0
-camera.position.z = 2
-scene.add(camera)
-
-// Controls
-// const controls = new OrbitControls(camera, canvas)
-// controls.enableDamping = true
-
-/**
- * Renderer
- */
-const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
-})
-renderer.setSize(sizes.width, sizes.height)
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
-/**
- * Animate
- */
-
-const clock = new THREE.Clock()
-
-const tick = () =>
-{
-
-    const elapsedTime = clock.getElapsedTime()
-
-    // Update objects
-    sphere.rotation.y = .5 * elapsedTime
-
-    // Update Orbital Controls
-    // controls.update()
-
-    // Render
-    renderer.render(scene, camera)
-
-    // Call tick again on the next frame
-    window.requestAnimationFrame(tick)
-}
-
-tick()
+	  camera.aspect = width / height;
+	  camera.updateProjectionMatrix();
+	}
+	});

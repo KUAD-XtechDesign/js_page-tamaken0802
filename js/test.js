@@ -1,94 +1,54 @@
-window.addEventListener('DOMContentLoaded', init);
+window.addEventListener("DOMContentLoaded", init);
+
 function init() {
-    // レンダラーを作成
-    const renderer = new THREE.WebGLRenderer({
-        canvas: document.querySelector('#canvas')
-    });
-    // ウィンドウサイズ設定
-    width = document.getElementById('main_canvas').getBoundingClientRect().width;
-    height = document.getElementById('main_canvas').getBoundingClientRect().height;
-    renderer.setPixelRatio(1);
-    renderer.setSize(width, height);
-    console.log(window.devicePixelRatio);
-    console.log(width+", "+height);
- 
-    // シーンを作成
-    const scene = new THREE.Scene();
- 
-    // カメラを作成
-    camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
-    camera.position.set(0, 400, -1000);
-    
-    const controls = new THREE.OrbitControls(camera);
-    //camera.lookAt(new THREE.Vector3(0, 400, 0));
+  const width = 960;
+  const height = 540;
 
-    // Load GLTF or GLB
-    const loader = new THREE.GLTFLoader();
-    const url = 'obj/abc.glb';
-    
-    let model = null;
-    loader.load(
-        url, 
-        function ( gltf ){
-            model = gltf.scene;
-            model.name = "model_with_cloth";
-            model.scale.set(400.0, 400.0, 400.0);
-            model.position.set(0,-400,0);
-            scene.add( gltf.scene );
+  // レンダラーを作成
+  const renderer = new THREE.WebGLRenderer({
+    canvas: document.querySelector("#myCanvas")
+  });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(width, height);
 
-            model["test"] = 100;
-            console.log("model");
-        },
-        function ( error ) {
-            console.log( 'An error happened' );
-            console.log( error );
-        }
-    );
-    renderer.gammaOutput = true;
-    renderer.gammaFactor = 2.2;
+  // シーンを作成
+  const scene = new THREE.Scene();
 
+  // カメラを作成
+  const camera = new THREE.PerspectiveCamera(
+    45,
+    width / height,
+    1,
+    10000
+  );
+  camera.position.set(0, 0, +1000);
 
-    // 平行光源
-    const light = new THREE.DirectionalLight(0xFFFFFF);
-    light.intensity = 2; // 光の強さを倍に
-    light.position.set(1, 1, 1);
-    // シーンに追加
-    scene.add(light);
+  // 箱を作成
+  const geometry = new THREE.BoxGeometry(500, 500, 500);
+  const material = new THREE.MeshStandardMaterial({
+    color: 0x0000ff
+  });
+  const box = new THREE.Mesh(geometry, material);
+  scene.add(box);
 
-    // 初回実行
-    tick();
-    function tick() {
-        controls.update();
-        
-        scene.traverse(function(obj) {
-            if(obj.name == "J_Bip_C_Chest"){
-                obj.rotation.z += 2 /180*3.1415;
-            }
-        });
-        if (model != null){
-            console.log(model);
-        }
-        renderer.render(scene, camera);
-        requestAnimationFrame(tick);
-    }
-    
+  // 平行光源
+  const light = new THREE.DirectionalLight(0xffffff);
+  light.intensity = 2; // 光の強さを倍に
+  light.position.set(1, 1, 1);
+  // シーンに追加
+  scene.add(light);
 
-    // 初期化のために実行
-    onResize();
-    // リサイズイベント発生時に実行
-    window.addEventListener('resize', onResize);
-    function onResize() {
-        // サイズを取得
-        width = document.getElementById('main_canvas').getBoundingClientRect().width;
-        height = document.getElementById('main_canvas').getBoundingClientRect().height;
+  // 初回実行
+  tick();
 
-        // レンダラーのサイズを調整する
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(width, height);
+  function tick() {
+    requestAnimationFrame(tick);
 
-        // カメラのアスペクト比を正す
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-        console.log(width);
-    }
+    // 箱を回転させる
+    box.rotation.x += 0.01;
+    box.rotation.y += 0.01;
+
+    // レンダリング
+    renderer.render(scene, camera);
+  }
 }

@@ -1,54 +1,76 @@
-window.addEventListener("DOMContentLoaded", init);
+import * as THREE from './build/three.module.js';
+import { OrbitControls } from './jsm/controls/OrbitControls.js';
+import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
+import { VRButton } from './jsm/webxr/VRButton.js';
 
-function init() {
-  const width = 960;
-  const height = 540;
+init();
 
-  // レンダラーを作成
+async function init() {
+  const canvas = document.createElement('canvas');
+
+  document.body.appendChild(canvas);
+
   const renderer = new THREE.WebGLRenderer({
-    canvas: document.querySelector("#myCanvas")
+    canvas,
+    antialias: true
   });
-  renderer.setPixelRatio(window.devicePixelRatio);
+  const scene = new THREE.Scene();
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  renderer.setPixelRatio(1);
   renderer.setSize(width, height);
 
-  // シーンを作成
-  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, width / height, 1, 100);
 
-  // カメラを作成
-  const camera = new THREE.PerspectiveCamera(
-    45,
-    width / height,
-    1,
-    10000
-  );
-  camera.position.set(0, 0, +1000);
+  camera.position.set(0, 1, 10);
 
-  // 箱を作成
-  const geometry = new THREE.BoxGeometry(500, 500, 500);
-  const material = new THREE.MeshStandardMaterial({
-    color: 0x0000ff
-  });
-  const box = new THREE.Mesh(geometry, material);
-  scene.add(box);
+  const controls = new OrbitControls(camera, renderer.domElement);
 
-  // 平行光源
-  const light = new THREE.DirectionalLight(0xffffff);
-  light.intensity = 2; // 光の強さを倍に
-  light.position.set(1, 1, 1);
-  // シーンに追加
+  const light = new THREE.AmbientLight(0xFFFFFF, 1.0);
+
   scene.add(light);
 
-  // 初回実行
-  tick();
+  const loader = new GLTFLoader();
+  const url = '/glass_circles_copy.glb';
+
+  const model = await (() => {
+    return new Promise((resolve) => {
+      loader.load(
+        url,
+        (gltf) => {
+          resolve(gltf.scene);
+        },
+        (err) => {
+          console.error(err);
+        }
+      );
+    });
+  })();
+
+  model.traverse((object) => {
+    if (object.isMesh) {
+      object.material.color.r = 1;
+      object.material.color.g = 0;
+      object.material.color.b = 0;
+      object.material.transparent = true;
+      object.material.opacity = .8;
+    }
+  });
+
+  model.position.set(0, 0, 0);
+  scene.add(model);
+
+  renderer.setAnimationLoop(tick);
+  document.body.appendChild(VRButton.createButton(renderer));
 
   function tick() {
-    requestAnimationFrame(tick);
+    controls.update();
 
-    // 箱を回転させる
-    box.rotation.x += 0.01;
-    box.rotation.y += 0.01;
+    if (model) {
+      model.rotation.y += .01;
+    }
 
-    // レンダリング
     renderer.render(scene, camera);
   }
 }

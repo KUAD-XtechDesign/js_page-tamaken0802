@@ -2,12 +2,83 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <!-- three.jsを読み込む -->
-  <script src="js/three.js"></script>
-  <!-- index.jsを読み込む -->
-  <script src="js/test.js"></script>
+  <title>three.js demo</title>
+  <style>
+    * {
+      margin: 0; padding: 0;
+    }
+
+    body {
+      background: black;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <canvas id="myCanvas"></canvas>
+  <script type="module">
+    import * as THREE from './js/hree.module.js';
+    import { OrbitControls } from './js/OrbitControls.js';
+    import { GLTFLoader } from './js/GLTFLoader.js';
+
+    const canvas = document.createElement('canvas');
+
+    document.body.appendChild(canvas);
+
+    const scene = new THREE.Scene();
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true
+    });
+
+    renderer.setSize(width, height);
+
+    const camera = new THREE.PerspectiveCamera(45, width / height, 1, 100);
+
+    camera.position.set(0, 1, 10);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    const light = new THREE.DirectionalLight(0xFFFFFF);
+
+    light.position.set(1, 1, 1);
+    scene.add(light);
+
+    const loader = new GLTFLoader();
+    const url = '/glass_circles_copy.glb';
+
+    let model;
+
+    loader.load(
+      url,
+      (gltf) => {
+        model = gltf.scene;
+
+        model.scale.set(1, 1, 1);
+        model.position.set(0, 1, -3);
+        scene.add(gltf.scene);
+
+        tick();
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+
+    function tick() {
+      controls.update();
+
+      if (model) {
+        model.rotation.y += .01;
+      }
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    }
+</script>
 </body>
 </html>

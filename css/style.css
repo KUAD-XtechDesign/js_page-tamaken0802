@@ -33,3 +33,14 @@ canvas {
 	border-radius: 50%;
 	background: #0091EA;
 }
+
+.box1 {
+  padding: 0.5em 1em;
+  margin: 2em 0;
+  font-weight: bold;
+  border: solid 3px #ffffff;
+}
+.box1 p {
+  margin: 0; 
+  padding: 0;
+}

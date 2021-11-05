@@ -1,7 +1,7 @@
 $(function(){
 	//基本設定
 	var width = 900;
-	var height = 900;
+	var height = 1500;
 
 	var renderer = new THREE.WebGLRenderer({
 		canvas: document.querySelector("#canvas"),

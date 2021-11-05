@@ -13,7 +13,7 @@ $(function(){
 
 	// カメラ設定
 	var camera = new THREE.PerspectiveCamera(3,width / height,1,10000);
-	camera.position.set(1,1,1); 
+	camera.position.set(1,300, 500); 
     
     // ライト設定
     ambientLight = new THREE.AmbientLight(0xffffff);

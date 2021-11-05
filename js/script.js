@@ -28,10 +28,10 @@ $(function(){
 
 	// MTL,Obj読み込み
 	new THREE.MTLLoader().setPath('./obj/')
-    .load('monu9.mtl',
+    .load('chr_sword.mtl',
     function(materials){
         materials.preload();
-        new THREE.OBJLoader().setPath('./obj/').setMaterials(materials).load('monu9.obj',
+        new THREE.OBJLoader().setPath('./obj/').setMaterials(materials).load('chr_sword.obj',
               function(object){
                 objmodel = object.clone();
                 obj = new THREE.Object3D();

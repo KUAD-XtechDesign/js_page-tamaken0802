@@ -27,27 +27,6 @@ $(function(){
     controls.autoRotate = true;
 
 	// MTL,Obj読み込み
-        let model = null;
-        loader.load(
-            url, 
-            function ( gltf ){
-                model = gltf.scene;
-                model.name = "model_with_cloth";
-                model.scale.set(400.0, 400.0, 400.0);
-                model.position.set(0,-400,0);
-                scene.add( gltf.scene );
-    
-                model["test"] = 100;
-                console.log("model");
-            },
-            function ( error ) {
-                console.log( 'An error happened' );
-                console.log( error );
-            }
-        );
-        renderer.gammaOutput = true;
-        renderer.gammaFactor = 2.2;
-    
 	new THREE.MTLLoader().setPath('./obj/')
     .load('3x3x3.mtl',
     function(materials){

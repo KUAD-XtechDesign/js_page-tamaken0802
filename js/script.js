@@ -64,5 +64,17 @@ $(function(){
 
 	  camera.aspect = width / height;
 	  camera.updateProjectionMatrix();
+
+	  const container = document.querySelector('#container');
+	  const item = document.querySelector('#item');
+		  
+	  container.addEventListener("mousemove", mousemove);
+		  
+	  function mousemove(e) {
+		  item.style.left = e.clientX - 25 + "px";
+		  item.style.top = e.clientY - 25 + "px";
+	  }
+	  JavaScript
+	  
 	}
 	});

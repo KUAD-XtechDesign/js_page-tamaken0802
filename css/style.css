@@ -15,3 +15,21 @@ canvas {
   display: block;
   cursor: move;
 }
+
+#container {
+	width: 100%;
+	height: 200px;
+	position: relative;
+	background: #000;
+	overflow: hidden;
+}
+
+#item{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background: #0091EA;
+}

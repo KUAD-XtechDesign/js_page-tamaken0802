@@ -33,3 +33,5 @@ canvas {
 	border-radius: 50%;
 	background: #0091EA;
 }
+
+.box{width: 0.5em; border: solid 3px rgb(255, 255, 255);}
